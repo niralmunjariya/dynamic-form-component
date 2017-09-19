@@ -1,2 +1,4 @@
-# dynamic-form-component
-Configuration driven dynamic form in Angular
+# Dynamic Form Component
+
+A configuration driven dynamic form component using Angular
+
