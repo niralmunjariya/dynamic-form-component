@@ -1,0 +1,11 @@
+<div *ngIf="group.get(config.name).errors && (group.get(config.name).touched || form.submitted === true)" data-notification
+  class="bx--toast-notification bx--toast-notification--error" role="alert" style="width: 100%;">
+  <div class="bx--toast-notification__details">
+    <div class="bx--toast-notification__title">Validation Error</div>
+    <p *ngIf="group.get(config.name).hasError('required')">{{config.label}} is required.</p>
+    <p *ngIf="group.get(config.name).hasError('minlength')">Minimum {{group.get(config.name).errors.minlength.requiredLength}} characters are required.</p>
+    <p *ngIf="group.get(config.name).hasError('maxlength')">Maximum {{group.get(config.name).errors.maxlength.requiredLength}} characters are allowed.</p>
+    <p *ngIf="group.get(config.name).hasError('min')">Minimum allowed value is {{group.get(config.name).errors.min.min}}.</p>
+    <p *ngIf="group.get(config.name).hasError('max')">Maximum allowed value is {{group.get(config.name).errors.max.max}}.</p>
+  </div>
+</div>

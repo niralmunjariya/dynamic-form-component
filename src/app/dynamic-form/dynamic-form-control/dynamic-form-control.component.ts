@@ -1,21 +1,32 @@
-// dynamic-form-control.component.ts
+import { ViewEncapsulation } from '@angular/core';
 import { DynamicControlConfig } from './../dynamic-control.config';
-import { FormGroup } from '@angular/forms';
-import { Component } from '@angular/core';
+import { FormGroup, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, OnInit, ElementRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'dynamic-form-control',
-  template: `
-    <div [formGroup]="formGroup" class="form-group">
-      <label>{{controlConfig.label}}</label>
-      <input [type]="controlConfig.type" class="form-control"
-      [placeholder]="controlConfig.placeholder" [formControlName]="controlConfig.name">
-    </div>
-  `
+  templateUrl: './dynamic-form-control.component.html',
+  encapsulation: ViewEncapsulation.None
 })
-export class DynamicFormControlComponent {
+export class DynamicFormControlComponent implements OnInit {
   formGroup: FormGroup;
   controlConfig: DynamicControlConfig;
-  constructor() { }
+  formObject: any;
+  constructor(private http: HttpClient, private el: ElementRef) {
+    this.el = el;
+  }
+
+  ngOnInit(): void {
+    if (this.controlConfig.hasOwnProperty('properties') &&
+      this.controlConfig.properties.hasOwnProperty('dataSource') &&
+      this.controlConfig.properties.dataSource.hasOwnProperty('remote')) {
+      this.http.get(this.controlConfig.properties.dataSource.remote.url)
+        .subscribe(data => {
+          this.controlConfig.properties.dataSource.items = data;
+        });
+    }
+  }
+
 }

@@ -1,0 +1,166 @@
+<style>
+  .ui-select-multiple .ui-select-match-item {
+    outline: 0;
+    margin: 0 6px 3px 0;
+    background-color: #c0e6ff;
+    color: #325c80;
+    padding: 5px;
+    border-radius: 0.9375rem;
+    height: 1.25rem;
+    font-size: 0.75rem;
+  }
+
+  .ui-select-multiple .ui-select-choices {
+    margin-top: 0.75em !important;
+  }
+
+  .ui-select-choices-row>a {
+    padding: 8px 20px !important;
+    text-decoration: none;
+  }
+
+  .ui-select-choices-row.active>a {
+    background-color: #3d70b2 !important;
+  }
+
+  .bx--toast-notification:first-child {
+    margin-top: 0;
+  }
+
+  .bx--toast-notification {
+    box-shadow: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    background: linear-gradient(to right, rgba(231, 29, 50, 0.25), white);
+  }
+
+  .required:after {
+    content: " *";
+    color: red;
+  }
+
+</style>
+<div [formGroup]="formGroup" novalidate>
+  <ng-container *ngIf="controlConfig.type === 'text' || controlConfig.type === 'password'">
+    <div class="bx--form-item">
+      <label [requiredIndicator]="controlConfig.validate" class="bx--label">{{controlConfig.label}}</label>
+      <input [ngStyle]="controlConfig.style" [type]="controlConfig.type" class="bx--text-input" [placeholder]="controlConfig.placeholder"
+        [formControlName]="controlConfig.name" />
+      <validation-error [form]="formObject" [group]="formGroup" [config]="controlConfig"></validation-error>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="controlConfig.type === 'number'">
+    <div class="bx--form-item">
+      <label [requiredIndicator]="controlConfig.validate" class="bx--label">{{controlConfig.label}}</label>
+      <div data-numberinput class="bx--number">
+        <input [ngStyle]="controlConfig.style" [placeholder]="controlConfig.placeholder" [formControlName]="controlConfig.name" type="number"
+          [value]="controlConfig.defaultValue">
+        <div class="bx--number__controls">
+          <button type="button" class="bx--number__control-btn up-icon">
+            <svg viewBox="0 2 10 5" width="10" height="5" fill-rule="evenodd">
+              <path d="M10 5L5 0 0 5z"></path>
+            </svg>
+          </button>
+          <button type="button" class="bx--number__control-btn down-icon">
+            <svg viewBox="0 2 10 5" width="10" height="5" fill-rule="evenodd">
+              <path d="M10 0L5 5 0 0z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <validation-error [form]="formObject" [group]="formGroup" [config]="controlConfig"></validation-error>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="controlConfig.type === 'radio'">
+    <fieldset class="bx--fieldset">
+      <legend [requiredIndicator]="controlConfig.validate" class="bx--label">{{controlConfig.label}}</legend>
+      <div class="bx--form-item">
+        <div [ngStyle]="controlConfig.style" class="bx--radio-button-group" style="margin-bottom: 0.5rem;">
+          <ng-container *ngFor="let option of controlConfig.properties.dataSource.items;let i=index;">
+            <input id="radio{{i}}" class="bx--radio-button" type="radio" [formControlName]="controlConfig.name" [value]="option.value">
+            <label for="radio{{i}}" class="bx--radio-button__label">
+              <span class="bx--radio-button__appearance"></span>
+              {{option.label}}
+            </label>
+          </ng-container>
+        </div>
+        <validation-error [form]="formObject" [group]="formGroup" [config]="controlConfig"></validation-error>
+      </div>
+    </fieldset>
+  </ng-container>
+  <ng-container *ngIf="controlConfig.type === 'checkbox'">
+    <fieldset class="bx--fieldset">
+      <legend [requiredIndicator]="controlConfig.validate" class="bx--label">{{controlConfig.label}}</legend>
+      <div class="bx--form-item bx--checkbox-wrapper">
+        <ng-container *ngFor="let option of controlConfig.properties.dataSource.items;let i=index;">
+          <div style="display:inline-block;margin-bottom:0.5rem;">
+            <input id="bx--checkbox{{i}}" class="bx--checkbox" type="checkbox" [value]="option.value" [formControlName]="controlConfig.name">
+            <label for="bx--checkbox{{i}}" class="bx--checkbox-label">
+                <span class="bx--checkbox-appearance">
+                  <svg class="bx--checkbox-checkmark" width="12" height="9" viewBox="0 0 12 9" fill-rule="evenodd">
+                    <path d="M4.1 6.1L1.4 3.4 0 4.9 4.1 9l7.6-7.6L10.3 0z"></path>
+                  </svg>
+                </span>
+                {{option.label}}
+              </label>
+          </div>
+        </ng-container>
+        <validation-error [form]="formObject" [group]="formGroup" [config]="controlConfig"></validation-error>
+      </div>
+    </fieldset>
+  </ng-container>
+  <ng-container *ngIf="controlConfig.type === 'select'">
+    <div class="bx--form-item">
+      <label [requiredIndicator]="controlConfig.validate" class="bx--label">{{controlConfig.label}}</label>
+      <div class="bx--select">
+        <select [formControlName]="controlConfig.name" class="bx--select-input">
+          <ng-container *ngFor="let option of controlConfig.properties.dataSource.items;let i=index;">
+            <option class="bx--select-option" [value]="option.value">{{option.label}}</option>
+          </ng-container>
+        </select>
+        <svg class="bx--select__arrow" width="10" height="5" viewBox="0 0 10 5" fill-rule="evenodd">
+          <path d="M10 0L5 5 0 0z"></path>
+        </svg>
+      </div>
+      <validation-error [form]="formObject" [group]="formGroup" [config]="controlConfig"></validation-error>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="controlConfig.type === 'datepicker'">
+    <div class="bx--form-item">
+      <div data-date-picker data-date-picker-type="single" class="bx--date-picker bx--date-picker--single">
+        <div class="bx--date-picker-container">
+          <label [requiredIndicator]="controlConfig.validate" class="bx--label">{{controlConfig.label}}</label>
+          <svg data-date-picker-icon class="bx--date-picker__icon" width="17" height="19" viewBox="0 0 17 19">
+            <path d="M12 0h2v2.7h-2zM3 0h2v2.7H3z" />
+            <path d="M0 2v17h17V2H0zm15 15H2V7h13v10z" />
+            <path d="M9.9 15H8.6v-3.9H7.1v-.9c.9 0 1.7-.3 1.8-1.2h1v6z" />
+          </svg>
+          <input [formControlName]="controlConfig.name" type="text" class="bx--date-picker__input" pattern="\d{1,2}/\d{1,2}/\d{4}"
+            [placeholder]="controlConfig.placeholder" data-date-picker-input />
+        </div>
+      </div>
+      <validation-error [form]="formObject" [group]="formGroup" [config]="controlConfig"></validation-error>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="controlConfig.type === 'select-multiple'">
+    <div class="bx--form-item">
+      <label [requiredIndicator]="controlConfig.validate" class="bx--label">{{controlConfig.label}}</label>
+      <ng-select style="padding: 6px;" [formControlName]="controlConfig.name" [allowClear]="true" class="bx--select-input" [multiple]="true"
+        [items]="controlConfig.properties.dataSource.items" placeholder="Select options">
+      </ng-select>
+      <validation-error [form]="formObject" [group]="formGroup" [config]="controlConfig"></validation-error>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="controlConfig.type === 'toggle'">
+    <div class="bx--form-item">
+      <label [requiredIndicator]="controlConfig.validate" class="bx--label">{{controlConfig.label}}</label>
+      <input [id]="controlConfig.name" [formControlName]="controlConfig.name" class="bx--toggle" type="checkbox">
+      <label [for]="controlConfig.name" class="bx--toggle__label">
+            <span class="bx--toggle__text--left">{{controlConfig.properties.offLabel}}</span>
+            <span class="bx--toggle__appearance"></span>
+            <span class="bx--toggle__text--right">{{controlConfig.properties.onLabel}}</span>
+          </label>
+      <validation-error [form]="formObject" [group]="formGroup" [config]="controlConfig"></validation-error>
+    </div>
+  </ng-container>
+</div>
